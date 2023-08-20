@@ -105,14 +105,16 @@
                                 }
                             ],
                             "custom_config": {}
+                        },
+                        {
+                            "key": "prefix",
+                            "type": "string",
+                            "required": true
                         }
                     ],
                     "outputs": [
                         {
                             "key": "prefix"
-                        },
-                        {
-                            "key": "vpc_names"
                         }
                     ],
                     "iam_permissions": [
@@ -395,14 +397,16 @@
                                 }
                             ],
                             "custom_config": {}
+                        },
+                        {
+                            "key": "prefix",
+                            "type": "string",
+                            "required": true
                         }
                     ],
                     "outputs": [
                         {
                             "key": "prefix"
-                        },
-                        {
-                            "key": "vpc_names"
                         }
                     ],
                     "iam_permissions": [
