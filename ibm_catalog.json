@@ -128,9 +128,6 @@
                     "outputs": [
                         {
                             "key": "prefix"
-                        },
-                        {
-                            "key": "vpc_names"
                         }
                     ],
                     "iam_permissions": [
