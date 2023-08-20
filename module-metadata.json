@@ -1,0 +1,1397 @@
+{
+  "path": ".",
+  "variables": {
+    "access_host_or_ip": {
+      "name": "access_host_or_ip",
+      "type": "string",
+      "description": "The public IP address or hostname for the access host. The address is used to reach the target or server_host IP address and to configure the DNS, NTP, NFS, and Squid proxy services. Set it to null if you do not want to configure any services.",
+      "source": [
+        "module.configure_dns",
+        "module.configure_nfs",
+        "module.configure_ntp",
+        "module.configure_squid"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 119
+      }
+    },
+    "cloud_connection_count": {
+      "name": "cloud_connection_count",
+      "type": "number",
+      "description": "Required number of Cloud connections to create or reuse. The maximum number of connections is two per location.",
+      "default": 2,
+      "required": true,
+      "source": [
+        "module.powervs_cloud_connection_attach.ibm_pi_cloud_connection_network_attach.powervs_subnet_bkp_nw_attach.count",
+        "module.powervs_cloud_connection_attach.ibm_pi_cloud_connection_network_attach.powervs_subnet_bkp_nw_attach_backup.count",
+        "module.powervs_cloud_connection_attach.ibm_pi_cloud_connection_network_attach.powervs_subnet_mgmt_nw_attach.count",
+        "module.powervs_cloud_connection_attach.ibm_pi_cloud_connection_network_attach.powervs_subnet_mgmt_nw_attach_backup.count",
+        "module.powervs_cloud_connection_create.data.ibm_dl_gateway.gateway_ds_1.count",
+        "module.powervs_cloud_connection_create.data.ibm_dl_gateway.gateway_ds_2.count",
+        "module.powervs_cloud_connection_create.ibm_pi_cloud_connection.cloud_connection.count",
+        "module.powervs_cloud_connection_create.ibm_pi_cloud_connection.cloud_connection_backup.count",
+        "module.powervs_cloud_connection_create.ibm_tg_connection.ibm_tg_connection_1.count",
+        "module.powervs_cloud_connection_create.ibm_tg_connection.ibm_tg_connection_2.count",
+        "module.powervs_cloud_connection_create.time_sleep.dl_1_resource_propagation.count",
+        "module.powervs_cloud_connection_create.time_sleep.dl_2_resource_propagation.count"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 79
+      }
+    },
+    "cloud_connection_gr": {
+      "name": "cloud_connection_gr",
+      "type": "bool",
+      "description": "Whether to enable global routing for this IBM Cloud connection. You can specify this value when you create a connection.",
+      "required": true,
+      "source": [
+        "module.powervs_cloud_connection_create.ibm_pi_cloud_connection.cloud_connection.pi_cloud_connection_global_routing",
+        "module.powervs_cloud_connection_create.ibm_pi_cloud_connection.cloud_connection_backup.pi_cloud_connection_global_routing"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 107
+      }
+    },
+    "cloud_connection_metered": {
+      "name": "cloud_connection_metered",
+      "type": "bool",
+      "description": "Whether to enable metering for this IBM Cloud connection. You can specify this value when you create a connection.",
+      "required": true,
+      "source": [
+        "module.powervs_cloud_connection_create.ibm_pi_cloud_connection.cloud_connection.pi_cloud_connection_metered",
+        "module.powervs_cloud_connection_create.ibm_pi_cloud_connection.cloud_connection_backup.pi_cloud_connection_metered"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 113
+      }
+    },
+    "cloud_connection_name_prefix": {
+      "name": "cloud_connection_name_prefix",
+      "type": "string",
+      "description": "If null or empty string, default cloud connection name will be \u003czone\u003e-conn-1.",
+      "source": [
+        "module.powervs_cloud_connection_create"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 73
+      }
+    },
+    "cloud_connection_speed": {
+      "name": "cloud_connection_speed",
+      "type": "number",
+      "description": "Speed in megabits per second. Supported values are 50, 100, 200, 500, 1000, 2000, 5000, 10000. Required when you create a connection.",
+      "default": 5000,
+      "required": true,
+      "source": [
+        "module.powervs_cloud_connection_create.ibm_pi_cloud_connection.cloud_connection.pi_cloud_connection_speed",
+        "module.powervs_cloud_connection_create.ibm_pi_cloud_connection.cloud_connection_backup.pi_cloud_connection_speed"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 85
+      }
+    },
+    "dns_forwarder_config": {
+      "name": "dns_forwarder_config",
+      "type": "object({\n    dns_enable        = bool\n    server_host_or_ip = string\n    dns_servers       = string\n  })",
+      "description": "Configuration for the DNS forwarder to a DNS service that is not reachable directly from PowerVS.",
+      "default": {
+        "dns_enable": "false",
+        "dns_servers": "161.26.0.7; 161.26.0.8; 9.9.9.9;",
+        "server_host_or_ip": ""
+      },
+      "source": [
+        "module.configure_dns",
+        "module.configure_dns",
+        "module.configure_dns"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 139
+      }
+    },
+    "nfs_config": {
+      "name": "nfs_config",
+      "type": "object({\n    nfs_enable        = bool\n    server_host_or_ip = string\n    nfs_file_system = list(object({\n      name       = string\n      mount_path = string\n      size       = number\n    }))\n  })",
+      "description": "Configuration for the shared NFS file system (for example, for the installation media). Creates a filesystem of disk size specified, mounts and NFS exports it.",
+      "default": {
+        "nfs_enable": "false",
+        "nfs_file_system": [
+          {
+            "mount_path": "/nfs",
+            "name": "nfs",
+            "size": 1000
+          }
+        ],
+        "server_host_or_ip": ""
+      },
+      "source": [
+        "module.configure_nfs",
+        "module.configure_nfs",
+        "module.configure_nfs"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 165
+      }
+    },
+    "ntp_forwarder_config": {
+      "name": "ntp_forwarder_config",
+      "type": "object({\n    ntp_enable        = bool\n    server_host_or_ip = string\n  })",
+      "description": "Configuration for the NTP forwarder to an NTP service that is not reachable directly from PowerVS.",
+      "default": {
+        "ntp_enable": "false",
+        "server_host_or_ip": ""
+      },
+      "source": [
+        "module.configure_ntp",
+        "module.configure_ntp",
+        "module.configure_ntp"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 153
+      }
+    },
+    "perform_proxy_client_setup": {
+      "name": "perform_proxy_client_setup",
+      "type": "object(\n    {\n      squid_client_ips = list(string)\n      squid_server_ip  = string\n      squid_port       = string\n      no_proxy_hosts   = string\n    }\n  )",
+      "description": "Proxy configuration to allow internet access for a VM or LPAR.",
+      "source": [
+        "module.configure_dns",
+        "module.configure_nfs",
+        "module.configure_ntp",
+        "module.configure_squid"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 183
+      }
+    },
+    "powervs_backup_network": {
+      "name": "powervs_backup_network",
+      "type": "object({\n    name = string\n    cidr = string\n  })",
+      "description": "Name of the IBM Cloud PowerVS backup network and CIDR to create.",
+      "default": {
+        "cidr": "10.52.0.0/24",
+        "name": "bkp_net"
+      },
+      "source": [
+        "module.powervs_workspace"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 50
+      }
+    },
+    "powervs_image_names": {
+      "name": "powervs_image_names",
+      "type": "list(string)",
+      "description": "List of Images to be imported into cloud account from catalog images.",
+      "default": [
+        "SLES15-SP3-SAP",
+        "SLES15-SP3-SAP-NETWEAVER",
+        "RHEL8-SP4-SAP",
+        "RHEL8-SP4-SAP-NETWEAVER"
+      ],
+      "source": [
+        "module.powervs_workspace"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 101
+      }
+    },
+    "powervs_management_network": {
+      "name": "powervs_management_network",
+      "type": "object({\n    name = string\n    cidr = string\n  })",
+      "description": "Name of the IBM Cloud PowerVS management subnet and CIDR to create.",
+      "default": {
+        "cidr": "10.51.0.0/24",
+        "name": "mgmt_net"
+      },
+      "source": [
+        "module.powervs_cloud_connection_attach",
+        "module.powervs_workspace"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 38
+      }
+    },
+    "powervs_resource_group_name": {
+      "name": "powervs_resource_group_name",
+      "type": "string",
+      "description": "Existing IBM Cloud resource group name.",
+      "required": true,
+      "source": [
+        "module.powervs_cloud_connection_attach.data.ibm_resource_group.resource_group_ds.name",
+        "module.powervs_cloud_connection_create.data.ibm_resource_group.resource_group_ds.name",
+        "module.powervs_workspace.data.ibm_resource_group.resource_group_ds.name"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 10
+      },
+      "cloud_data_type": "resource_group",
+      "computed": true,
+      "cloud_data_range": [
+        "resolved_to:name"
+      ]
+    },
+    "powervs_sshkey_name": {
+      "name": "powervs_sshkey_name",
+      "type": "string",
+      "description": "Name of the PowerVS SSH key to create.",
+      "default": "ssh-key-pvs",
+      "required": true,
+      "source": [
+        "module.powervs_workspace.ibm_pi_key.ssh_key.pi_key_name"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 21
+      }
+    },
+    "powervs_workspace_name": {
+      "name": "powervs_workspace_name",
+      "type": "string",
+      "description": "Name of the PowerVS workspace to create.",
+      "default": "power-workspace",
+      "required": true,
+      "source": [
+        "module.powervs_cloud_connection_attach.data.ibm_resource_instance.powervs_workspace_ds.name",
+        "module.powervs_cloud_connection_create.data.ibm_resource_instance.powervs_workspace_ds.name",
+        "module.powervs_workspace.ibm_resource_instance.powervs_workspace.name"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 15
+      }
+    },
+    "powervs_zone": {
+      "name": "powervs_zone",
+      "type": "string",
+      "description": "IBM Cloud PowerVS zone.",
+      "required": true,
+      "source": [
+        "module.powervs_cloud_connection_attach.data.ibm_resource_instance.powervs_workspace_ds.location",
+        "module.powervs_cloud_connection_create.data.ibm_resource_instance.powervs_workspace_ds.location",
+        "module.powervs_workspace.ibm_resource_instance.powervs_workspace.location"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 1
+      },
+      "cloud_data_type": "region",
+      "immutable": true,
+      "computed": true
+    },
+    "reuse_cloud_connections": {
+      "name": "reuse_cloud_connections",
+      "type": "bool",
+      "description": "When true, IBM Cloud connections are reused (if attached to the transit gateway).",
+      "default": false,
+      "source": [
+        "module.initial_validation",
+        "module.powervs_cloud_connection_create"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 67
+      }
+    },
+    "squid_config": {
+      "name": "squid_config",
+      "type": "object({\n    squid_enable      = bool\n    server_host_or_ip = string\n    squid_port        = string\n  })",
+      "description": "Configuration for the Squid proxy setup.",
+      "default": {
+        "server_host_or_ip": "",
+        "squid_enable": "false",
+        "squid_port": "3128"
+      },
+      "source": [
+        "module.configure_squid",
+        "module.configure_squid",
+        "module.configure_squid",
+        "time_sleep.wait_for_squid_setup_to_complete.count"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 125
+      }
+    },
+    "ssh_private_key": {
+      "name": "ssh_private_key",
+      "type": "string",
+      "description": "Private SSH key (RSA format) used to login to IBM PowerVS instances. Should match to uploaded public SSH key referenced by 'ssh_public_key'. Entered data must be in heredoc strings format (https://www.terraform.io/language/expressions/strings#heredoc-strings). The key is not uploaded or stored.",
+      "required": true,
+      "sensitive": true,
+      "source": [
+        "module.configure_dns",
+        "module.configure_nfs",
+        "module.configure_ntp",
+        "module.configure_squid"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 32
+      }
+    },
+    "ssh_public_key": {
+      "name": "ssh_public_key",
+      "type": "string",
+      "description": "Public SSH Key for the PowerVM to create.",
+      "required": true,
+      "source": [
+        "module.powervs_workspace.ibm_pi_key.ssh_key.pi_ssh_key"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 27
+      }
+    },
+    "tags": {
+      "name": "tags",
+      "type": "list(string)",
+      "description": "List of tag names for the IBM Cloud PowerVS Workspace.",
+      "required": true,
+      "source": [
+        "module.powervs_workspace.ibm_resource_instance.powervs_workspace.tags"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 95
+      },
+      "min_length": 1,
+      "max_length": 128,
+      "matches": "^[A-Za-z0-9:_ .-]+$",
+      "computed": true,
+      "elem": {
+        "type": "TypeString"
+      }
+    },
+    "transit_gateway_name": {
+      "name": "transit_gateway_name",
+      "type": "string",
+      "description": "Name of the existing transit gateway. Required when you create new IBM Cloud connections. Set it to null if reusing cloud connections",
+      "required": true,
+      "source": [
+        "module.powervs_cloud_connection_create.data.ibm_tg_gateway.tg_gateway_ds.name"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 62
+      }
+    }
+  },
+  "outputs": {
+    "access_host_or_ip": {
+      "name": "access_host_or_ip",
+      "description": "The public IP address or hostname for the access host. The address is used to reach the target or server_host IP address and to configure the DNS, NTP, NFS, and Squid proxy services. Set it to null if you do not want to configure any services.",
+      "value": "var.access_host_or_ip",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 41
+      },
+      "type": "string"
+    },
+    "cloud_connection_count": {
+      "name": "cloud_connection_count",
+      "description": "Required number of Cloud connections to create or reuse. The maximum number of connections is two per location.",
+      "value": "var.cloud_connection_count",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 26
+      },
+      "type": "number"
+    },
+    "dns_host_or_ip": {
+      "name": "dns_host_or_ip",
+      "description": "DNS forwarder host for created PowerVS infrastructure.",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 51
+      }
+    },
+    "nfs_host_or_ip_path": {
+      "name": "nfs_host_or_ip_path",
+      "description": "NFS host for created PowerVS infrastructure.",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 61
+      }
+    },
+    "ntp_host_or_ip": {
+      "name": "ntp_host_or_ip",
+      "description": "NTP host for created PowerVS infrastructure.",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 56
+      }
+    },
+    "powervs_backup_network_name": {
+      "name": "powervs_backup_network",
+      "description": "Name of the IBM Cloud PowerVS backup network and CIDR to create.",
+      "value": "var.powervs_backup_network.name",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 36
+      },
+      "type": "object({\n    name = string\n    cidr = string\n  })"
+    },
+    "powervs_management_network_name": {
+      "name": "powervs_management_network",
+      "description": "Name of the IBM Cloud PowerVS management subnet and CIDR to create.",
+      "value": "var.powervs_management_network.name",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 31
+      },
+      "type": "object({\n    name = string\n    cidr = string\n  })"
+    },
+    "powervs_resource_group_name": {
+      "name": "powervs_resource_group_name",
+      "description": "Existing IBM Cloud resource group name.",
+      "value": "var.powervs_resource_group_name",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 21
+      },
+      "type": "string",
+      "cloud_data_type": "resource_group",
+      "cloud_data_range": [
+        "resolved_to:name"
+      ]
+    },
+    "powervs_sshkey_name": {
+      "name": "powervs_sshkey_name",
+      "description": "Name of the PowerVS SSH key to create.",
+      "value": "var.powervs_sshkey_name",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 11
+      },
+      "type": "string"
+    },
+    "powervs_workspace_crn": {
+      "name": "powervs_workspace_crn",
+      "description": "PowerVS infrastructure workspace CRN.",
+      "value": "module.powervs_workspace.powervs_workspace_crn",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 6
+      },
+      "type": "TypeString"
+    },
+    "powervs_workspace_name": {
+      "name": "powervs_workspace_name",
+      "description": "Name of the PowerVS workspace to create.",
+      "value": "var.powervs_workspace_name",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 1
+      },
+      "type": "string"
+    },
+    "powervs_zone": {
+      "name": "powervs_zone",
+      "description": "IBM Cloud PowerVS zone.",
+      "value": "var.powervs_zone",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 16
+      },
+      "type": "string",
+      "cloud_data_type": "region"
+    },
+    "proxy_host_or_ip_port": {
+      "name": "proxy_host_or_ip_port",
+      "description": "Proxy host for created PowerVS infrastructure.",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 46
+      }
+    }
+  },
+  "required_core": [
+    "\u003e= 1.3"
+  ],
+  "required_providers": {
+    "ibm": {
+      "source": "IBM-Cloud/ibm",
+      "version_constraints": [
+        "\u003e=1.49.0"
+      ]
+    },
+    "time": {
+      "source": "hashicorp/time",
+      "version_constraints": [
+        "\u003e= 0.9.1"
+      ]
+    }
+  },
+  "managed_resources": {
+    "time_sleep.wait_for_squid_setup_to_complete": {
+      "mode": "managed",
+      "type": "time_sleep",
+      "name": "wait_for_squid_setup_to_complete",
+      "attributes": {
+        "count": "squid_config"
+      },
+      "provider": {
+        "name": "time"
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 66
+      }
+    }
+  },
+  "data_resources": {},
+  "module_calls": {
+    "configure_dns": {
+      "name": "configure_dns",
+      "source": "./submodules/configure_network_services",
+      "attributes": {
+        "access_host_or_ip": "access_host_or_ip",
+        "count": "dns_forwarder_config",
+        "perform_proxy_client_setup": "perform_proxy_client_setup",
+        "service_config": "dns_forwarder_config",
+        "ssh_private_key": "ssh_private_key",
+        "target_server_ip": "dns_forwarder_config"
+      },
+      "managed_resources": {
+        "null_resource.execute_ansible_role": {
+          "mode": "managed",
+          "type": "null_resource",
+          "name": "execute_ansible_role",
+          "provider": {
+            "name": "null"
+          },
+          "pos": {
+            "filename": "submodules/configure_network_services/main.tf",
+            "line": 186
+          }
+        },
+        "null_resource.install_packages": {
+          "mode": "managed",
+          "type": "null_resource",
+          "name": "install_packages",
+          "provider": {
+            "name": "null"
+          },
+          "pos": {
+            "filename": "submodules/configure_network_services/main.tf",
+            "line": 128
+          }
+        },
+        "null_resource.perform_proxy_client_setup": {
+          "mode": "managed",
+          "type": "null_resource",
+          "name": "perform_proxy_client_setup",
+          "attributes": {
+            "count": "perform_proxy_client_setup"
+          },
+          "provider": {
+            "name": "null"
+          },
+          "pos": {
+            "filename": "submodules/configure_network_services/main.tf",
+            "line": 23
+          }
+        },
+        "null_resource.update_os": {
+          "mode": "managed",
+          "type": "null_resource",
+          "name": "update_os",
+          "provider": {
+            "name": "null"
+          },
+          "pos": {
+            "filename": "submodules/configure_network_services/main.tf",
+            "line": 71
+          }
+        },
+        "time_sleep.wait_for_reboot": {
+          "mode": "managed",
+          "type": "time_sleep",
+          "name": "wait_for_reboot",
+          "provider": {
+            "name": "time"
+          },
+          "pos": {
+            "filename": "submodules/configure_network_services/main.tf",
+            "line": 113
+          }
+        }
+      },
+      "data_resources": {},
+      "pos": {
+        "filename": "main.tf",
+        "line": 73
+      }
+    },
+    "configure_nfs": {
+      "name": "configure_nfs",
+      "source": "./submodules/configure_network_services",
+      "attributes": {
+        "access_host_or_ip": "access_host_or_ip",
+        "count": "nfs_config",
+        "perform_proxy_client_setup": "perform_proxy_client_setup",
+        "service_config": "nfs_config",
+        "ssh_private_key": "ssh_private_key",
+        "target_server_ip": "nfs_config"
+      },
+      "managed_resources": {
+        "null_resource.execute_ansible_role": {
+          "mode": "managed",
+          "type": "null_resource",
+          "name": "execute_ansible_role",
+          "provider": {
+            "name": "null"
+          },
+          "pos": {
+            "filename": "submodules/configure_network_services/main.tf",
+            "line": 186
+          }
+        },
+        "null_resource.install_packages": {
+          "mode": "managed",
+          "type": "null_resource",
+          "name": "install_packages",
+          "provider": {
+            "name": "null"
+          },
+          "pos": {
+            "filename": "submodules/configure_network_services/main.tf",
+            "line": 128
+          }
+        },
+        "null_resource.perform_proxy_client_setup": {
+          "mode": "managed",
+          "type": "null_resource",
+          "name": "perform_proxy_client_setup",
+          "attributes": {
+            "count": "perform_proxy_client_setup"
+          },
+          "provider": {
+            "name": "null"
+          },
+          "pos": {
+            "filename": "submodules/configure_network_services/main.tf",
+            "line": 23
+          }
+        },
+        "null_resource.update_os": {
+          "mode": "managed",
+          "type": "null_resource",
+          "name": "update_os",
+          "provider": {
+            "name": "null"
+          },
+          "pos": {
+            "filename": "submodules/configure_network_services/main.tf",
+            "line": 71
+          }
+        },
+        "time_sleep.wait_for_reboot": {
+          "mode": "managed",
+          "type": "time_sleep",
+          "name": "wait_for_reboot",
+          "provider": {
+            "name": "time"
+          },
+          "pos": {
+            "filename": "submodules/configure_network_services/main.tf",
+            "line": 113
+          }
+        }
+      },
+      "data_resources": {},
+      "pos": {
+        "filename": "main.tf",
+        "line": 99
+      }
+    },
+    "configure_ntp": {
+      "name": "configure_ntp",
+      "source": "./submodules/configure_network_services",
+      "attributes": {
+        "access_host_or_ip": "access_host_or_ip",
+        "count": "ntp_forwarder_config",
+        "perform_proxy_client_setup": "perform_proxy_client_setup",
+        "service_config": "ntp_forwarder_config",
+        "ssh_private_key": "ssh_private_key",
+        "target_server_ip": "ntp_forwarder_config"
+      },
+      "managed_resources": {
+        "null_resource.execute_ansible_role": {
+          "mode": "managed",
+          "type": "null_resource",
+          "name": "execute_ansible_role",
+          "provider": {
+            "name": "null"
+          },
+          "pos": {
+            "filename": "submodules/configure_network_services/main.tf",
+            "line": 186
+          }
+        },
+        "null_resource.install_packages": {
+          "mode": "managed",
+          "type": "null_resource",
+          "name": "install_packages",
+          "provider": {
+            "name": "null"
+          },
+          "pos": {
+            "filename": "submodules/configure_network_services/main.tf",
+            "line": 128
+          }
+        },
+        "null_resource.perform_proxy_client_setup": {
+          "mode": "managed",
+          "type": "null_resource",
+          "name": "perform_proxy_client_setup",
+          "attributes": {
+            "count": "perform_proxy_client_setup"
+          },
+          "provider": {
+            "name": "null"
+          },
+          "pos": {
+            "filename": "submodules/configure_network_services/main.tf",
+            "line": 23
+          }
+        },
+        "null_resource.update_os": {
+          "mode": "managed",
+          "type": "null_resource",
+          "name": "update_os",
+          "provider": {
+            "name": "null"
+          },
+          "pos": {
+            "filename": "submodules/configure_network_services/main.tf",
+            "line": 71
+          }
+        },
+        "time_sleep.wait_for_reboot": {
+          "mode": "managed",
+          "type": "time_sleep",
+          "name": "wait_for_reboot",
+          "provider": {
+            "name": "time"
+          },
+          "pos": {
+            "filename": "submodules/configure_network_services/main.tf",
+            "line": 113
+          }
+        }
+      },
+      "data_resources": {},
+      "pos": {
+        "filename": "main.tf",
+        "line": 86
+      }
+    },
+    "configure_squid": {
+      "name": "configure_squid",
+      "source": "./submodules/configure_network_services",
+      "attributes": {
+        "access_host_or_ip": "access_host_or_ip",
+        "count": "squid_config",
+        "perform_proxy_client_setup": "perform_proxy_client_setup",
+        "service_config": "squid_config",
+        "ssh_private_key": "ssh_private_key",
+        "target_server_ip": "squid_config"
+      },
+      "managed_resources": {
+        "null_resource.execute_ansible_role": {
+          "mode": "managed",
+          "type": "null_resource",
+          "name": "execute_ansible_role",
+          "provider": {
+            "name": "null"
+          },
+          "pos": {
+            "filename": "submodules/configure_network_services/main.tf",
+            "line": 186
+          }
+        },
+        "null_resource.install_packages": {
+          "mode": "managed",
+          "type": "null_resource",
+          "name": "install_packages",
+          "provider": {
+            "name": "null"
+          },
+          "pos": {
+            "filename": "submodules/configure_network_services/main.tf",
+            "line": 128
+          }
+        },
+        "null_resource.perform_proxy_client_setup": {
+          "mode": "managed",
+          "type": "null_resource",
+          "name": "perform_proxy_client_setup",
+          "attributes": {
+            "count": "perform_proxy_client_setup"
+          },
+          "provider": {
+            "name": "null"
+          },
+          "pos": {
+            "filename": "submodules/configure_network_services/main.tf",
+            "line": 23
+          }
+        },
+        "null_resource.update_os": {
+          "mode": "managed",
+          "type": "null_resource",
+          "name": "update_os",
+          "provider": {
+            "name": "null"
+          },
+          "pos": {
+            "filename": "submodules/configure_network_services/main.tf",
+            "line": 71
+          }
+        },
+        "time_sleep.wait_for_reboot": {
+          "mode": "managed",
+          "type": "time_sleep",
+          "name": "wait_for_reboot",
+          "provider": {
+            "name": "time"
+          },
+          "pos": {
+            "filename": "submodules/configure_network_services/main.tf",
+            "line": 113
+          }
+        }
+      },
+      "data_resources": {},
+      "pos": {
+        "filename": "main.tf",
+        "line": 53
+      }
+    },
+    "initial_validation": {
+      "name": "initial_validation",
+      "source": "./submodules/terraform_initial_validation",
+      "attributes": {
+        "cloud_connection_validate": "reuse_cloud_connections"
+      },
+      "managed_resources": {},
+      "data_resources": {},
+      "pos": {
+        "filename": "main.tf",
+        "line": 5
+      }
+    },
+    "powervs_cloud_connection_attach": {
+      "name": "powervs_cloud_connection_attach",
+      "source": "./submodules/powervs_cloudconnection_attach",
+      "attributes": {
+        "cloud_connection_count": "cloud_connection_count",
+        "powervs_resource_group_name": "powervs_resource_group_name",
+        "powervs_subnet_names": "powervs_management_network",
+        "powervs_workspace_name": "powervs_workspace_name",
+        "powervs_zone": "powervs_zone"
+      },
+      "managed_resources": {
+        "ibm_pi_cloud_connection_network_attach.powervs_subnet_bkp_nw_attach": {
+          "mode": "managed",
+          "type": "ibm_pi_cloud_connection_network_attach",
+          "name": "powervs_subnet_bkp_nw_attach",
+          "attributes": {
+            "count": "cloud_connection_count"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_cloudconnection_attach/main.tf",
+            "line": 47
+          }
+        },
+        "ibm_pi_cloud_connection_network_attach.powervs_subnet_bkp_nw_attach_backup": {
+          "mode": "managed",
+          "type": "ibm_pi_cloud_connection_network_attach",
+          "name": "powervs_subnet_bkp_nw_attach_backup",
+          "attributes": {
+            "count": "cloud_connection_count"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_cloudconnection_attach/main.tf",
+            "line": 63
+          }
+        },
+        "ibm_pi_cloud_connection_network_attach.powervs_subnet_mgmt_nw_attach": {
+          "mode": "managed",
+          "type": "ibm_pi_cloud_connection_network_attach",
+          "name": "powervs_subnet_mgmt_nw_attach",
+          "attributes": {
+            "count": "cloud_connection_count"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_cloudconnection_attach/main.tf",
+            "line": 39
+          }
+        },
+        "ibm_pi_cloud_connection_network_attach.powervs_subnet_mgmt_nw_attach_backup": {
+          "mode": "managed",
+          "type": "ibm_pi_cloud_connection_network_attach",
+          "name": "powervs_subnet_mgmt_nw_attach_backup",
+          "attributes": {
+            "count": "cloud_connection_count"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_cloudconnection_attach/main.tf",
+            "line": 55
+          }
+        }
+      },
+      "data_resources": {
+        "data.ibm_pi_cloud_connections.cloud_connection_ds": {
+          "mode": "data",
+          "type": "ibm_pi_cloud_connections",
+          "name": "cloud_connection_ds",
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_cloudconnection_attach/main.tf",
+            "line": 31
+          }
+        },
+        "data.ibm_pi_network.powervs_subnets_ds": {
+          "mode": "data",
+          "type": "ibm_pi_network",
+          "name": "powervs_subnets_ds",
+          "attributes": {
+            "count": "powervs_subnet_names",
+            "pi_network_name": "powervs_subnet_names"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_cloudconnection_attach/main.tf",
+            "line": 21
+          }
+        },
+        "data.ibm_resource_group.resource_group_ds": {
+          "mode": "data",
+          "type": "ibm_resource_group",
+          "name": "resource_group_ds",
+          "attributes": {
+            "name": "powervs_resource_group_name"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_cloudconnection_attach/main.tf",
+            "line": 5
+          }
+        },
+        "data.ibm_resource_instance.powervs_workspace_ds": {
+          "mode": "data",
+          "type": "ibm_resource_instance",
+          "name": "powervs_workspace_ds",
+          "attributes": {
+            "location": "powervs_zone",
+            "name": "powervs_workspace_name"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_cloudconnection_attach/main.tf",
+            "line": 9
+          }
+        }
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 43
+      }
+    },
+    "powervs_cloud_connection_create": {
+      "name": "powervs_cloud_connection_create",
+      "source": "./submodules/powervs_cloudconnection_create",
+      "attributes": {
+        "cloud_connection_count": "cloud_connection_count",
+        "cloud_connection_gr": "cloud_connection_gr",
+        "cloud_connection_metered": "cloud_connection_metered",
+        "cloud_connection_name_prefix": "cloud_connection_name_prefix",
+        "cloud_connection_speed": "cloud_connection_speed",
+        "count": "reuse_cloud_connections",
+        "powervs_resource_group_name": "powervs_resource_group_name",
+        "powervs_workspace_name": "powervs_workspace_name",
+        "powervs_zone": "powervs_zone",
+        "transit_gateway_name": "transit_gateway_name"
+      },
+      "managed_resources": {
+        "ibm_pi_cloud_connection.cloud_connection": {
+          "mode": "managed",
+          "type": "ibm_pi_cloud_connection",
+          "name": "cloud_connection",
+          "attributes": {
+            "count": "cloud_connection_count",
+            "pi_cloud_connection_global_routing": "cloud_connection_gr",
+            "pi_cloud_connection_metered": "cloud_connection_metered",
+            "pi_cloud_connection_speed": "cloud_connection_speed"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_cloudconnection_create/main.tf",
+            "line": 29
+          }
+        },
+        "ibm_pi_cloud_connection.cloud_connection_backup": {
+          "mode": "managed",
+          "type": "ibm_pi_cloud_connection",
+          "name": "cloud_connection_backup",
+          "attributes": {
+            "count": "cloud_connection_count",
+            "pi_cloud_connection_global_routing": "cloud_connection_gr",
+            "pi_cloud_connection_metered": "cloud_connection_metered",
+            "pi_cloud_connection_speed": "cloud_connection_speed"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_cloudconnection_create/main.tf",
+            "line": 39
+          }
+        },
+        "ibm_tg_connection.ibm_tg_connection_1": {
+          "mode": "managed",
+          "type": "ibm_tg_connection",
+          "name": "ibm_tg_connection_1",
+          "attributes": {
+            "count": "cloud_connection_count"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_cloudconnection_create/main.tf",
+            "line": 96
+          }
+        },
+        "ibm_tg_connection.ibm_tg_connection_2": {
+          "mode": "managed",
+          "type": "ibm_tg_connection",
+          "name": "ibm_tg_connection_2",
+          "attributes": {
+            "count": "cloud_connection_count"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_cloudconnection_create/main.tf",
+            "line": 105
+          }
+        },
+        "time_sleep.dl_1_resource_propagation": {
+          "mode": "managed",
+          "type": "time_sleep",
+          "name": "dl_1_resource_propagation",
+          "attributes": {
+            "count": "cloud_connection_count"
+          },
+          "provider": {
+            "name": "time"
+          },
+          "pos": {
+            "filename": "submodules/powervs_cloudconnection_create/main.tf",
+            "line": 74
+          }
+        },
+        "time_sleep.dl_2_resource_propagation": {
+          "mode": "managed",
+          "type": "time_sleep",
+          "name": "dl_2_resource_propagation",
+          "attributes": {
+            "count": "cloud_connection_count"
+          },
+          "provider": {
+            "name": "time"
+          },
+          "pos": {
+            "filename": "submodules/powervs_cloudconnection_create/main.tf",
+            "line": 83
+          }
+        }
+      },
+      "data_resources": {
+        "data.ibm_dl_gateway.gateway_ds_1": {
+          "mode": "data",
+          "type": "ibm_dl_gateway",
+          "name": "gateway_ds_1",
+          "attributes": {
+            "count": "cloud_connection_count"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_cloudconnection_create/main.tf",
+            "line": 62
+          }
+        },
+        "data.ibm_dl_gateway.gateway_ds_2": {
+          "mode": "data",
+          "type": "ibm_dl_gateway",
+          "name": "gateway_ds_2",
+          "attributes": {
+            "count": "cloud_connection_count"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_cloudconnection_create/main.tf",
+            "line": 68
+          }
+        },
+        "data.ibm_resource_group.resource_group_ds": {
+          "mode": "data",
+          "type": "ibm_resource_group",
+          "name": "resource_group_ds",
+          "attributes": {
+            "name": "powervs_resource_group_name"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_cloudconnection_create/main.tf",
+            "line": 9
+          }
+        },
+        "data.ibm_resource_instance.powervs_workspace_ds": {
+          "mode": "data",
+          "type": "ibm_resource_instance",
+          "name": "powervs_workspace_ds",
+          "attributes": {
+            "location": "powervs_zone",
+            "name": "powervs_workspace_name"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_cloudconnection_create/main.tf",
+            "line": 13
+          }
+        },
+        "data.ibm_tg_gateway.tg_gateway_ds": {
+          "mode": "data",
+          "type": "ibm_tg_gateway",
+          "name": "tg_gateway_ds",
+          "attributes": {
+            "name": "transit_gateway_name"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_cloudconnection_create/main.tf",
+            "line": 54
+          }
+        }
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 27
+      }
+    },
+    "powervs_workspace": {
+      "name": "powervs_workspace",
+      "source": "./submodules/powervs_workspace",
+      "attributes": {
+        "powervs_backup_network": "powervs_backup_network",
+        "powervs_image_names": "powervs_image_names",
+        "powervs_management_network": "powervs_management_network",
+        "powervs_resource_group_name": "powervs_resource_group_name",
+        "powervs_sshkey_name": "powervs_sshkey_name",
+        "powervs_workspace_name": "powervs_workspace_name",
+        "powervs_zone": "powervs_zone",
+        "ssh_public_key": "ssh_public_key",
+        "tags": "tags"
+      },
+      "managed_resources": {
+        "ibm_pi_image.import_images_1": {
+          "mode": "managed",
+          "type": "ibm_pi_image",
+          "name": "import_images_1",
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_workspace/main.tf",
+            "line": 86
+          }
+        },
+        "ibm_pi_image.import_images_2": {
+          "mode": "managed",
+          "type": "ibm_pi_image",
+          "name": "import_images_2",
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_workspace/main.tf",
+            "line": 98
+          }
+        },
+        "ibm_pi_image.import_images_3": {
+          "mode": "managed",
+          "type": "ibm_pi_image",
+          "name": "import_images_3",
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_workspace/main.tf",
+            "line": 110
+          }
+        },
+        "ibm_pi_key.ssh_key": {
+          "mode": "managed",
+          "type": "ibm_pi_key",
+          "name": "ssh_key",
+          "attributes": {
+            "pi_key_name": "powervs_sshkey_name",
+            "pi_ssh_key": "ssh_public_key"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_workspace/main.tf",
+            "line": 33
+          }
+        },
+        "ibm_pi_network.backup_network": {
+          "mode": "managed",
+          "type": "ibm_pi_network",
+          "name": "backup_network",
+          "attributes": {
+            "pi_cidr": "powervs_backup_network",
+            "pi_network_name": "powervs_backup_network"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_workspace/main.tf",
+            "line": 52
+          }
+        },
+        "ibm_pi_network.management_network": {
+          "mode": "managed",
+          "type": "ibm_pi_network",
+          "name": "management_network",
+          "attributes": {
+            "pi_cidr": "powervs_management_network",
+            "pi_network_name": "powervs_management_network"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_workspace/main.tf",
+            "line": 43
+          }
+        },
+        "ibm_resource_instance.powervs_workspace": {
+          "mode": "managed",
+          "type": "ibm_resource_instance",
+          "name": "powervs_workspace",
+          "attributes": {
+            "location": "powervs_zone",
+            "name": "powervs_workspace_name",
+            "tags": "tags"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_workspace/main.tf",
+            "line": 14
+          }
+        }
+      },
+      "data_resources": {
+        "data.ibm_pi_catalog_images.catalog_images_ds": {
+          "mode": "data",
+          "type": "ibm_pi_catalog_images",
+          "name": "catalog_images_ds",
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_workspace/main.tf",
+            "line": 66
+          }
+        },
+        "data.ibm_resource_group.resource_group_ds": {
+          "mode": "data",
+          "type": "ibm_resource_group",
+          "name": "resource_group_ds",
+          "attributes": {
+            "name": "powervs_resource_group_name"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": "submodules/powervs_workspace/main.tf",
+            "line": 10
+          }
+        }
+      },
+      "outputs": {
+        "powervs_workspace_crn": {
+          "name": "powervs_workspace_crn",
+          "description": "PowerVS infrastructure workspace CRN.",
+          "value": "ibm_resource_instance.powervs_workspace.target_crn",
+          "pos": {
+            "filename": "submodules/powervs_workspace/outputs.tf",
+            "line": 1
+          },
+          "type": "TypeString"
+        }
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 13
+      }
+    }
+  }
+}

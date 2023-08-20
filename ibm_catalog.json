@@ -1,0 +1,348 @@
+{
+    "products": [
+        {
+            "name": "deploy-arch-ibm-pvs-aix",
+            "label": "Power Virtual Server with AIX",
+            "product_kind": "solution",
+            "tags": [
+                "aix",
+                "ibm_created",
+                "free",
+                "ibm_beta",
+                "Technology",
+                "SoftwareAndPlatformApplications",
+                "target_terraform",
+                "terraform",
+                "reference_architecture",
+                "solution",
+                "support_ibm"
+            ],
+            "keywords": [
+                "power",
+                "power solution",
+                "power infrastructure",
+                "powervs",
+                "power framework",
+                "sap power",
+                "automation",
+                "secure",
+                "networking",
+                "vertical scaling",
+                "scalable server"
+            ],
+            "short_description": "",
+            "long_description": "",
+            "offering_docs_url": "",
+            "offering_icon_url": "",
+            "features": [
+                {
+                    "description": "feature 1",
+                    "title": "feature 1"
+                },
+                {
+                    "description": "feature 2",
+                    "title": "feature 2"
+                },
+                {
+                    "description": "feature 3",
+                    "title": "feature 3"
+                }
+            ],
+            "flavors": [
+                {
+                    "label": "PowerVS AIX HA cluster",
+                    "name": "powervs-powerha",
+                    "install_type": "fullstack",
+                    "working_directory": "solutions/powerha-new",
+                    "usage_template": "",
+                    "compliance": {
+                        "authority": "scc-v3",
+                        "controls": [
+                            {
+                                "profile": {
+                                    "name": "IBM Cloud for Financial Services",
+                                    "version": "1.2.0"
+                                },
+                                "names": [
+                                    "SI-12(0)"
+                                ]
+                            }
+                        ]
+                    },
+                    "dependencies": [
+                        {
+                            "flavors": [
+                                "powervs-workspace"
+                            ],
+                            "install_type": "fullstack",
+                            "catalogID": "1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc",
+                            "id": "2dd486c7-b317-4aaa-907b-42671485ad96-global",
+                            "name": "deploy-arch-ibm-pvs-inf",
+                            "version": ">=1.0.0"
+                        }
+                    ],
+                    "configuration": [
+                        {
+                            "key": "prerequisite_workspace_id",
+                            "required": true,
+                            "custom_config": {
+                                "config_constraints": {
+                                    "flavorConstraint": "powervs-workspace",
+                                    "catalogID": "1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc",
+                                    "offeringID": "2dd486c7-b317-4aaa-907b-42671485ad96-global",
+                                    "install_type": "fullstack",
+                                    "versionConstraint": ">=1.0.0"
+                                },
+                                "grouping": "deployment",
+                                "original_grouping": "deployment",
+                                "type": "schematics_workspace"
+                            }
+                        },
+                        {
+                            "key": "powervs_zone",
+                            "type": "string",
+                            "required": true,
+                            "default_value": "",
+                            "options": [
+                                {
+                                    "displayname": "London (lon04)",
+                                    "value": "lon04"
+                                },
+                                {
+                                    "displayname": "London (lon06)",
+                                    "value": "lon06"
+                                },
+                                {
+                                    "displayname": "US-east (us-east)",
+                                    "value": "us-east"
+                                }
+                            ],
+                            "custom_config": {}
+                        },
+                        {
+                            "key": "prefix",
+                            "type": "string",
+                            "required": true
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "key": "prefix"
+                        },
+                        {
+                            "key": "vpc_names"
+                        }
+                    ],
+                    "iam_permissions": [
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
+                            ],
+                            "service_name": "appid"
+                        },
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
+                            ],
+                            "service_name": "cloud-object-storage"
+                        },
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
+                            ],
+                            "service_name": "hs-crypto"
+                        },
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::role:Administrator"
+                            ],
+                            "service_name": "iam-identity"
+                        },
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
+                            ],
+                            "service_name": "kms"
+                        },
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+                                "crn:v1:bluemix:public:iam::::role:Administrator"
+                            ],
+                            "service_name": "is.vpc"
+                        },
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::role:Editor"
+                            ],
+                            "service_name": "is.vpc"
+                        },
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::role:Editor"
+                            ],
+                            "service_name": "transit.gateway"
+                        },
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::role:Editor"
+                            ],
+                            "service_name": "directlink.connect"
+                        },
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
+                            ],
+                            "service_name": "power-iaas"
+                        }
+                    ],
+                    "architecture": {
+                        "features": [
+                            {
+                                "title": "Feature 1",
+                                "description": "Yes"
+                            },
+                            {
+                                "title": "feature 2",
+                                "description": "Yes"
+                            },
+                            {
+                                "title": "feature 3",
+                                "description": "Yes"
+                            }
+                        ],
+                        "diagrams": [
+                            {
+                                "diagram": {
+                                    "caption": "Power Virtual Server with VPC landing zone 'full-stack' variation",
+                                    "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-powervs-infrastructure/main/reference-architectures/full-stack/deploy-arch-ibm-pvs-inf-full-stack.svg",
+                                    "type": "image/svg+xml"
+                                },
+                                "description": "The Power Virtual Server with VPC landing zone as variation 'Create a new architecture' deploys VPC services and a Power Virtual Server workspace and interconnects them.\n \nRequired and optional management components are configured."
+                            }
+                        ]
+                    }
+                },
+                {
+                    "label": "additional AIX HA cluster node",
+                    "name": "powervs-workspace",
+                    "install_type": "extension",
+                    "working_directory": "solutions/powerha-extension",
+                    "usage_template": "",
+                    "compliance": {},
+                    "dependencies": [
+                        {
+                            "flavors": [
+                                "powervs-workspace"
+                            ],
+                            "install_type": "fullstack",
+                            "catalogID": "1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc",
+                            "id": "2dd486c7-b317-4aaa-907b-42671485ad96-global",
+                            "name": "deploy-arch-ibm-pvs-inf",
+                            "version": ">=1.0.0"
+                        }
+                    ],
+                    "configuration": [
+                        {
+                            "key": "prerequisite_workspace_id",
+                            "required": true,
+                            "custom_config": {
+                                "config_constraints": {
+                                    "flavorConstraint": "powervs-workspace",
+                                    "catalogID": "1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc",
+                                    "offeringID": "2dd486c7-b317-4aaa-907b-42671485ad96-global",
+                                    "install_type": "fullstack",
+                                    "versionConstraint": ">=1.0.0"
+                                },
+                                "grouping": "deployment",
+                                "original_grouping": "deployment",
+                                "type": "schematics_workspace"
+                            }
+                        },
+                        {
+                            "key": "powervs_zone",
+                            "type": "string",
+                            "required": true,
+                            "default_value": "",
+                            "options": [
+                                {
+                                    "displayname": "London (lon04)",
+                                    "value": "lon04"
+                                },
+                                {
+                                    "displayname": "London (lon06)",
+                                    "value": "lon06"
+                                },
+                                {
+                                    "displayname": "Frankfurt (eu-de-1)",
+                                    "value": "eu-de-1"
+                                }
+                            ],
+                            "custom_config": {}
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "key": "prefix"
+                        },
+                        {
+                            "key": "vpc_names"
+                        }
+                    ],
+                    "iam_permissions": [
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::role:Editor"
+                            ],
+                            "service_name": "is.vpc"
+                        },
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::role:Editor"
+                            ],
+                            "service_name": "transit.gateway"
+                        },
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::role:Editor"
+                            ],
+                            "service_name": "directlink.connect"
+                        },
+                        {
+                            "role_crns": [
+                                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
+                            ],
+                            "service_name": "power-iaas"
+                        }
+                    ],
+                    "architecture": {
+                        "features": [
+                            {
+                                "title": "Power Virtual Server Workspace",
+                                "description": "PowerVS Workspace with all required components"
+                            },
+                            {
+                                "title": "Internet proxy on VPC",
+                                "description": "Proxy service to reach public internet from PowerVS Workspace"
+                            },
+                            {
+                                "title": "Additional management configurations on VPC",
+                                "description": "NFS server, NTP forwarder, and DNS forwarder reachable from PowerVS Workspace"
+                            }
+                        ],
+                        "diagrams": [
+                            {
+                                "diagram": {
+                                    "caption": "Power Virtual Server with VPC landing zone 'extension' variation",
+                                    "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-powervs-infrastructure/main/reference-architectures/extension/deploy-arch-ibm-pvs-inf-extension.svg",
+                                    "type": "image/svg+xml"
+                                },
+                                "description": "The Power Virtual Server with VPC landing zone as variation 'Extend Power Virtual Server with VPC landing zone' creates an additional Power Virtual Server workspace and connects it with already created Power Virtual Server with VPC landing zone. It builds on existing Power Virtual Server with VPC landing zone deployed as a variation 'Create a new architecture'."
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}
