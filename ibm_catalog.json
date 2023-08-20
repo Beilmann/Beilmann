@@ -51,7 +51,7 @@
             "flavors": [
                 {
                     "label": "AIX instance (standalone)",
-                    "name": "powervs-workspace",
+                    "name": "aix-instance-standalone",
                     "install_type": "extension",
                     "working_directory": "solutions/aix-instance",
                     "usage_template": "",
@@ -172,7 +172,7 @@
                 },
                 {
                     "label": "AIX instances (single-zone HA cluster)",
-                    "name": "powervs-powerha",
+                    "name": "aix-instances-ha-single-zone",
                     "install_type": "extension",
                     "working_directory": "solutions/powerha-single-zone",
                     "usage_template": "",
@@ -343,7 +343,7 @@
                 },
                 {
                     "label": "AIX instances (multi-zone HA cluster)",
-                    "name": "powervs-workspace",
+                    "name": "aix-instances-ha-multi-zone",
                     "install_type": "extension",
                     "working_directory": "solutions/powerha-multi-zone",
                     "usage_template": "",
